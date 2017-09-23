@@ -4,7 +4,7 @@
 
 spdxSummarizer is a terminal-based set of tools for importing, analyzing and generating reports about files and licenses previously cleared using FOSSology.
 
-It imports [SPDX(R)](https://spdx.org/) tag-value files generated with FOSSology, and processes, categorizes and reports the license clearing results in various formats.
+It imports [SPDX®](https://spdx.org/) tag-value files generated with FOSSology, and processes, categorizes and reports the license clearing results in various formats.
 
 ## Caveats
 
