@@ -1,0 +1,105 @@
+{
+  
+  "config": {
+    "project": "[DEFAULT PROJECT]",
+    "desc": "[DEFAULT DESCRIPTION]",
+    "notes": "[DEFAULT NOTES RE SCANNING LOCATION, ETC.]",
+    "logo": "none",
+    "ignore_extensions": ".json;.png;.jpg;.jpeg;.gif;.pem;.crt;.key;.der;.ski"
+  },
+  
+  "categories": [
+    
+    {
+      "id": 1,
+      "name": "Project licenses",
+      "licenses": [
+        "Apache-2.0",
+        "CC-BY-4.0"
+      ]
+    },
+
+    {
+      "id": 2,
+      "name": "Use restrictions",
+      "licenses": [
+        "CC-BY-NC-4.0"
+      ]
+    },
+
+    {
+      "id": 3,
+      "name": "Copyleft",
+      "licenses": [
+        "GPL-2.0",
+        "GPL-2.0+",
+        "LGPL-2.0",
+        "LGPL-2.0+",
+        "LGPL-2.1",
+        "LGPL-2.1+",
+        "LGPL-3.0",
+        "LGPL-3.0+",
+        "MPL-2.0",
+        "MPL-1.1",
+        "CC-BY-SA-4.0",
+        "CDDL-1.0",
+        "CDDL-1.1",
+        "GPL",
+        "LGPL"
+      ]
+    },
+
+    {
+      "id": 4,
+      "name": "Attribution",
+      "licenses": [
+        "BSD-2-Clause",
+        "BSD-3-Clause",
+        "BSD",
+        "BSD-style",
+        "Google-BSD",
+        "MIT",
+        "MIT-style",
+        "ISC"
+      ]
+    },
+
+    {
+      "id": 5,
+      "name": "Other or Unknown",
+      "licenses": [
+        "CC0-1.0",
+        "WTFPL",
+        "See LICENSE file",
+        "Same license as"
+      ]
+    },
+
+    {
+      "id": 6,
+      "name": "No license found",
+      "licenses": [
+        "No license found"
+      ]
+    },
+
+    {
+      "id": 7,
+      "name": "Requires manual review",
+      "licenses": [
+        "Unclassified License"
+      ]
+    }
+
+  ], 
+
+  "conversions": {
+    "NOASSERTION": "No license found",
+    "NONE": "No license found",
+    "Same-license-as": "Same license as",
+    "See-file.LICENSE": "See LICENSE file",
+    "UnclassifiedLicense": "Unclassified License"
+  }
+  
+}
+

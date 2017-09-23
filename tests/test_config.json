@@ -1,0 +1,81 @@
+{
+
+  "config": {
+    "project": "Test project",
+    "desc": "Test description",
+    "notes": "Test notes",
+    "logo": "testlogo.png"
+  },
+
+  "categories": [
+
+    {
+      "id": 1,
+      "name": "Project licenses",
+      "licenses": [
+        "Apache-2.0",
+        "CC-BY-4.0"
+      ]
+    },
+
+    {
+      "id": 2,
+      "name": "Use restrictions",
+      "licenses": [
+        "CC-BY-NC-4.0"
+      ]
+    },
+
+    {
+      "id": 3,
+      "name": "Copyleft",
+      "licenses": [
+        "GPL-2.0"
+      ]
+    },
+
+    {
+      "id": 4,
+      "name": "Attribution",
+      "licenses": [
+        "MIT"
+      ]
+    },
+
+    {
+      "id": 5,
+      "name": "Other or Unknown",
+      "licenses": [
+        "See LICENSE file",
+        "Same license as"
+      ]
+    },
+
+    {
+      "id": 6,
+      "name": "No license found",
+      "licenses": [
+        "No license found"
+      ]
+    },
+
+    {
+      "id": 7,
+      "name": "Requires manual review",
+      "licenses": [
+        "Unclassified License"
+      ]
+    }
+
+  ],
+
+  "conversions": {
+    "NOASSERTION": "No license found",
+    "NONE": "No license found",
+    "Same-license-as": "Same license as",
+    "See-file.LICENSE": "See LICENSE file",
+    "UnclassifiedLicense": "Unclassified License"
+  }
+
+}
+
