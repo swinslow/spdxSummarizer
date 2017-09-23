@@ -20,7 +20,7 @@ The intended workflow is:
 3. import that tag-value file into spdxSummarizer; and
 4. use spdxSummarizer to generate reports.
 
-A walkthrough with a usage example, and further details about configuration and features, can be found in the file [`docs/USAGE.md`](docs/USAGE.md). Additional documentation is in other files in the `docs/` directory.
+A walkthrough with a usage example, and further details about configuration and features, can be found in the file [`docs/usage.md`](docs/usage.md). Additional documentation is in other files in the `docs/` directory.
 
 ## Authors
 
