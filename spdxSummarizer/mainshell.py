@@ -24,7 +24,7 @@ import sys
 import readline
 
 from spdxSummarizer.dbtools import FTDatabase
-from spdxSummarizer.parsetools import parseFossologySPDXReport, removePrefixes
+from spdxSummarizer.parsetools import parseSPDXReport, removePrefixes
 from spdxSummarizer.licenses import FTLicenseStore
 from spdxSummarizer.reports import (outputCSVFull, outputExcelFull,
   outputExcelComparison)
@@ -371,7 +371,7 @@ Do you want to review and categorize these licenses now?
     self.licstore.loadCategoriesFromDB()
 
     # try loading the SPDX report from this path
-    fds = parseFossologySPDXReport(report_filename)
+    fds = parseSPDXReport(report_filename)
     if fds == None or fds == []:
       print(f"Got invalid result when trying to parse SPDX report from {report_filename}")
       return False
@@ -456,7 +456,7 @@ Do you want to review and categorize these licenses now?
     print(f'''
   The spdxSummarizer database contains no scans.
   
-  Please enter the path to a FOSSology SPDX tag:value report to import.
+  Please enter the path to an SPDX tag:value report to import.
   Or, type "exit" to quit.
     ''')
     path = input(prompt)
@@ -476,7 +476,7 @@ Do you want to review and categorize these licenses now?
   # returns: True if processed a scan, False otherwise
   def shellNewScanRequest(self):
     print(f'''
-  Please enter the path to a new FOSSology SPDX tag:value report to import.
+  Please enter the path to a new SPDX tag:value report to import.
   Or, type "exit" to cancel.
     ''')
     path = input(prompt)

@@ -1,8 +1,8 @@
 # archives.py
 #
-# This is a collection of functions to compare files originating from a 
-# Fossology report with the original files from the zip or tar archive, to 
-# aid in identifying any missing files.
+# This is a collection of functions to compare files originating from an 
+# SPDX tag/value document with the original files from the zip or tar archive,
+# to aid in identifying any missing files.
 #
 # NOTE: This module is a work-in-progress and is not currently incorporated
 # into the main spdxSummarizer shell.
@@ -91,7 +91,7 @@ def extract_filenames(archive_filename):
 
 # Compare file set from SPDX report with files in archive
 # arguments:
-#   * fds: list of FileData records produced by parseFossologySPDXReport()
+#   * fds: list of FileData records produced by parseSPDXReport()
 #   * archive_filename: filename for archive to be parsed
 # returns: dictionary with three keys:
 #   * "archive_only": value is list of files only in the archive
