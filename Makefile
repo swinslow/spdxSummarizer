@@ -18,5 +18,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
+# Note: calling with -b option to buffer (silence) print stmts during tests
 test:
-	python3 -m unittest tests.test_dbtools
+	python3 -m unittest tests.test_dbtools -b
