@@ -54,6 +54,16 @@ class DBToolsTestSuite(unittest.TestCase):
   def test_smoke(self):
     assert True
 
+  ##### FTDatabase object initialization and closing
+
+  def test_connection_closes_when_FTDatabase_is_closed(self):
+    ftd = dbtools.FTDatabase()
+    ftd.createDatabase(":memory:")
+    ftd.initializeDatabaseTables("tests/test_config.json")
+    ftd.closeDatabase()
+    self.assertIsNone(ftd.conn)
+    self.assertIsNone(ftd.c)
+
   ##### Database initialization
 
   def test_db_is_initialized(self):
@@ -353,6 +363,8 @@ class DBToolsTestSuite(unittest.TestCase):
     for id in license_ids:
       self.assertGreater(id, last_id)
       last_id = id
+
+########## MAIN ENTRY POINT ##########
 
 if __name__ == "__main__":
   unittest.main()
