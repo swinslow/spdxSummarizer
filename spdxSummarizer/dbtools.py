@@ -305,7 +305,7 @@ class FTDatabase(object):
   # arguments: N/A
   # returns: list of IDs from all scans in database
   def getScansIDList(self):
-    self.c.execute("SELECT id FROM scans")
+    self.c.execute("SELECT id FROM scans ORDER BY id")
     res = self.c.fetchall()
     idlist = [t[0] for t in res]
     return idlist
@@ -315,7 +315,7 @@ class FTDatabase(object):
   # returns: list of data tuples from all scans in database
   #   tuple format: (id, scan_dt, desc)
   def getScansData(self):
-    self.c.execute("SELECT id, scan_dt, desc FROM scans")
+    self.c.execute("SELECT id, scan_dt, desc FROM scans ORDER BY id")
     return self.c.fetchall()
 
   # Get all data for prior scan with given ID.
@@ -324,7 +324,7 @@ class FTDatabase(object):
   # returns: tuple of data if found or None if not found
   #   tuple format: (id, scan_dt, desc)
   def getScanData(self, scan_id):
-    self.c.execute("SELECT id, scan_dt, desc FROM scans WHERE id = ?", [scan_id])
+    self.c.execute("SELECT id, scan_dt, desc FROM scans WHERE id = ? ORDER BY id", [scan_id])
     return self.c.fetchone()
 
   # Add new scan to database.
@@ -356,7 +356,7 @@ class FTDatabase(object):
   # arguments: N/A
   # returns: list of IDs from all categories in database
   def getCategoriesIDList(self):
-    self.c.execute("SELECT id FROM categories")
+    self.c.execute("SELECT id FROM categories ORDER BY id")
     res = self.c.fetchall()
     idlist = [t[0] for t in res]
     return idlist
@@ -366,7 +366,7 @@ class FTDatabase(object):
   # returns: list of data tuples from all categories in database
   #   tuple format: (id, name)
   def getCategoriesData(self):
-    self.c.execute("SELECT id, name FROM categories")
+    self.c.execute("SELECT id, name FROM categories ORDER BY id")
     return self.c.fetchall()
 
   # Get all data for known category with given ID.
@@ -375,7 +375,7 @@ class FTDatabase(object):
   # returns: tuple of data if found or None if not found
   #   tuple format: (id, name)
   def getCategoryData(self, category_id):
-    self.c.execute("SELECT id, name FROM categories WHERE id = ?", [category_id])
+    self.c.execute("SELECT id, name FROM categories WHERE id = ? ORDER BY id", [category_id])
     return self.c.fetchone()
 
   # Add new category to database.
@@ -407,7 +407,7 @@ class FTDatabase(object):
   # arguments: N/A
   # returns: list of IDs from all licenses in database
   def getLicensesIDList(self):
-    self.c.execute("SELECT id FROM licenses")
+    self.c.execute("SELECT id FROM licenses ORDER BY id")
     res = self.c.fetchall()
     idlist = [t[0] for t in res]
     return idlist
@@ -417,7 +417,7 @@ class FTDatabase(object):
   # returns: list of data tuples from all licenses in database
   #   tuple format: (id, short_name, category_id)
   def getLicensesData(self):
-    self.c.execute("SELECT id, short_name, category_id FROM licenses")
+    self.c.execute("SELECT id, short_name, category_id FROM licenses ORDER BY id")
     return self.c.fetchall()
 
   # Get all data for known license with given ID.
@@ -426,7 +426,7 @@ class FTDatabase(object):
   # returns: tuple of data if found or None if not found
   #   tuple format: (id, short_name, category_id)
   def getLicenseData(self, license_id):
-    self.c.execute("SELECT id, short_name, category_id FROM licenses WHERE id = ?", [license_id])
+    self.c.execute("SELECT id, short_name, category_id FROM licenses WHERE id = ? ORDER BY id", [license_id])
     return self.c.fetchone()
 
   # Add new license to database.
@@ -459,7 +459,7 @@ class FTDatabase(object):
   # arguments: N/A
   # returns: list of IDs from all conversions in database
   def getConversionsIDList(self):
-    self.c.execute("SELECT id FROM conversions")
+    self.c.execute("SELECT id FROM conversions ORDER BY id")
     res = self.c.fetchall()
     idlist = [t[0] for t in res]
     return idlist
@@ -469,7 +469,7 @@ class FTDatabase(object):
   # returns: list of data tuples from all conversions in database
   #   tuple format: (id, old_text, new_license_id)
   def getConversionsData(self):
-    self.c.execute("SELECT id, old_text, new_license_id FROM conversions")
+    self.c.execute("SELECT id, old_text, new_license_id FROM conversions ORDER BY id")
     return self.c.fetchall()
 
   # Get all data for known conversions with given ID.
@@ -478,7 +478,7 @@ class FTDatabase(object):
   # returns: tuple of data if found or None if not found
   #   tuple format: (id, old_text, new_license_id)
   def getConversionData(self, conversion_id):
-    self.c.execute("SELECT id, old_text, new_license_id FROM conversions WHERE id = ?", [conversion_id])
+    self.c.execute("SELECT id, old_text, new_license_id FROM conversions WHERE id = ? ORDER BY id", [conversion_id])
     return self.c.fetchone()
 
   # Add new conversion to database.
@@ -513,7 +513,7 @@ class FTDatabase(object):
   # returns: tuple of data if found or None if not found
   #   tuple format: (id, scan_id, filename, license_id, md5, sha1)
   def getFileData(self, file_id):
-    self.c.execute("SELECT id, scan_id, filename, license_id, md5, sha1 FROM files WHERE id = ?", [file_id])
+    self.c.execute("SELECT id, scan_id, filename, license_id, md5, sha1 FROM files WHERE id = ? ORDER BY id", [file_id])
     return self.c.fetchone()
 
   # Get all data for file with given scan ID and filename.
@@ -523,7 +523,7 @@ class FTDatabase(object):
   # returns: tuple of data if found or None if not found
   #   tuple format: (id, scan_id, filename, license_id, md5, sha1)
   def getFileInstanceData(self, scan_id, filename):
-    self.c.execute("SELECT id, scan_id, filename, license_id, md5, sha1 FROM files WHERE scan_id = ? and filename = ?", [scan_id, filename])
+    self.c.execute("SELECT id, scan_id, filename, license_id, md5, sha1 FROM files WHERE scan_id = ? and filename = ? ORDER BY id", [scan_id, filename])
     return self.c.fetchone()
 
   # Add new file to database.
