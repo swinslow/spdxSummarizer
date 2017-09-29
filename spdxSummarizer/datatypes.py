@@ -20,7 +20,7 @@
 
 from sqlalchemy import create_engine
 from sqlalchemy import Table, Column, Integer, String, Date, ForeignKey
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -52,30 +52,43 @@ class Category(Base):
 
 class License(Base):
   __tablename__ = 'licenses'
+  # columns
   id = Column(Integer(), primary_key=True)
   short_name = Column(String())
   category_id = Column(Integer(), ForeignKey('categories.id'))
+  # relationships
+  category = relationship("Category", backref=backref('licenses', order_by=id))
 
   def __repr__(self):
-    return f"Category {self.id}: {self.short_name}"
+    return f"License {self.id}: {self.short_name}, category {self.category.name}"
 
 class File(Base):
   __tablename__ = 'files'
+  # columns
   id = Column(Integer(), primary_key=True)
   scan_id = Column(Integer(), ForeignKey('scans.id'))
   filename = Column(String())
   license_id = Column(Integer(), ForeignKey('licenses.id'))
   md5 = Column(String())
   sha1 = Column(String())
+  # relationships
+  scan = relationship("Scan", backref=backref('files', order_by=id))
+  license = relationship("License", backref=backref('files', order_by=id))
 
   def __repr__(self):
-    return f"File {self.filename}"
+    return f"File {self.filename}, license: {self.license.short_name}"
 
 class Conversion(Base):
   __tablename__ = 'conversions'
+  # columns
   id = Column(Integer(), primary_key=True)
   old_text = Column(String())
   new_license_id = Column(Integer(), ForeignKey('licenses.id'))
+  # relationships
+  new_license = relationship(
+    "License",
+    backref=backref('conversions', order_by=id)
+  )
 
   def __repr__(self):
-    return f"Conversion {self.id}: {self.old_text} => {self.new_license_id}"
+    return f"Conversion {self.id}: {self.old_text} => {self.new_license.short_name} ({self.new_license_id})"
