@@ -1,4 +1,4 @@
-# ftconfig.py
+# spconfig.py
 #
 # This module holds configuration values for spdxSummarizer.
 #
@@ -19,12 +19,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # current version of spdxSummarizer
-FTVERSION = "0.2.0"
+SPVERSION = "0.2.1"
 
 # latest version in which database migrations are required
 # e.g. if a DB version is newer than this, then it doesn't require
-# a migration, even if it's older than the current FTVERSION
-FTVERSION_LAST_DB_CHANGE = "0.2.0"
+# a migration, even if it's older than the current SPVERSION
+SPVERSION_LAST_DB_CHANGE = "0.2.0"
 
 # Get a version tuple from a version string
 # arguments:
@@ -79,7 +79,7 @@ def compareVersionStrings(vstr1, vstr2):
 #           0 if version is equal to current spdxSummarizer version
 #          >0 if version is greaterthan current spdxSummarizer version
 def compareVersionToCurrent(version_str):
-  return compareVersionStrings(version_str, FTVERSION)
+  return compareVersionStrings(version_str, SPVERSION)
 
 # Compare version string with last database change version.
 # arguments:
@@ -88,4 +88,4 @@ def compareVersionToCurrent(version_str):
 #           0 if version is equal to last database change version
 #          >0 if version is greaterthan last database change version
 def compareVersionToLastDatabaseChange(version_str):
-  return compareVersionStrings(version_str, FTVERSION_LAST_DB_CHANGE)
+  return compareVersionStrings(version_str, SPVERSION_LAST_DB_CHANGE)

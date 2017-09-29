@@ -1,6 +1,6 @@
 # dbtools.py
 #
-# This module contains the FTDatabase class, for interacting with a SQLite
+# This module contains the SPDatabase class, for interacting with a SQLite
 # database which stores scan results and license data in spdxSummarizer.
 #
 # Copyright (C) 2017 The Linux Foundation
@@ -19,15 +19,17 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import sqlite3
 import json
 import os
 
-from spdxSummarizer.ftconfig import FTVERSION
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-class FTDatabase(object):
+from spdxSummarizer.spconfig import SPVERSION
+
+class SPDatabase(object):
   def __init__(self):
-    super(FTDatabase, self).__init__()
+    super(SPDatabase, self).__init__()
     self.conn = None
     self.c = None
     self.internal_configs = ["magic", "initialized", "version"]
@@ -275,7 +277,7 @@ class FTDatabase(object):
         self.c.execute("UPDATE config SET value = ? WHERE key = ?",
           ["yes", "initialized"])
         self.c.execute("INSERT INTO config (key, value) VALUES (?, ?)",
-          ["version", FTVERSION])
+          ["version", SPVERSION])
 
         self.conn.commit()
         return True
