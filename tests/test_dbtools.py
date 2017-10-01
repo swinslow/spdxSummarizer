@@ -20,14 +20,17 @@
 
 import unittest
 
+from datetime import date
+
 from spdxSummarizer import dbtools
+from spdxSummarizer.datatypes import Scan
 
 class DBToolsTestSuite(unittest.TestCase):
   """spdxSummarizer database tools test suite."""
 
   def setUp(self):
     # create and initialize an in-memory database
-    self.db = dbtools.FTDatabase()
+    self.db = dbtools.SPDatabase()
     self.db.createDatabase(":memory:")
 
     # test config file contains config, categories, licenses and conversions
@@ -42,27 +45,29 @@ class DBToolsTestSuite(unittest.TestCase):
     self.db = None
 
   def insertSampleScanData(self):
-    self.db.c.execute('''INSERT INTO scans (id, scan_dt, desc) VALUES
-      (1, "2017-01-01", "test scan 1"),
-      (8, "2017-08-08", "test scan 8"),
-      (3, "2017-03-03", "test scan 3"),
-      (2, "2017-02-02", "test scan 2")
-      ''')
+    scans = [
+      Scan(id=1, scan_dt=date(2017, 1, 1), desc="test scan 1"),
+      Scan(id=8, scan_dt=date(2017, 8, 8), desc="test scan 8"),
+      Scan(id=3, scan_dt=date(2017, 3, 3), desc="test scan 3"),
+      Scan(id=2, scan_dt=date(2017, 2, 2), desc="test scan 2"),
+    ]
+    self.db.session.bulk_save_objects(scans)
+    self.db.session.commit()
 
   ########## TESTS BELOW HERE ##########
 
   def test_smoke(self):
     assert True
 
-  ##### FTDatabase object initialization and closing
+  ##### SPDatabase object initialization and closing
 
-  def test_connection_closes_when_FTDatabase_is_closed(self):
-    ftd = dbtools.FTDatabase()
-    ftd.createDatabase(":memory:")
-    ftd.initializeDatabaseTables("tests/test_config.json")
-    ftd.closeDatabase()
-    self.assertIsNone(ftd.conn)
-    self.assertIsNone(ftd.c)
+  def test_connection_closes_when_SPDatabase_is_closed(self):
+    spd = dbtools.SPDatabase()
+    spd.createDatabase(":memory:")
+    spd.initializeDatabaseTables("tests/test_config.json")
+    spd.closeDatabase()
+    self.assertIsNone(spd.engine)
+    self.assertIsNone(spd.session)
 
   ##### Database initialization
 
@@ -72,7 +77,7 @@ class DBToolsTestSuite(unittest.TestCase):
 
   def test_empty_db_is_not_initialized(self):
     # a brand new database shouldn't be initialized
-    new_db = dbtools.FTDatabase()
+    new_db = dbtools.SPDatabase()
     self.assertFalse(new_db.isInitialized())
     # and an opened but empty database shouldn't be initialized
     new_db.createDatabase(":memory:")
@@ -152,7 +157,7 @@ class DBToolsTestSuite(unittest.TestCase):
     self.assertIsNone(scan)
 
   def test_cannot_add_new_scan_to_uninitialized_db(self):
-    new_db = dbtools.FTDatabase()
+    new_db = dbtools.SPDatabase()
     new_db.createDatabase(":memory:")
     scan_id = new_db.addNewScan("2018-01-01", "should fail", True)
     self.assertEqual(scan_id, -1)

@@ -21,6 +21,7 @@
 
 import json
 import os
+import datetime
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
@@ -37,11 +38,11 @@ class SPDatabase(object):
     self.session = None
     self.internal_configs = ["magic", "initialized", "version"]
 
-
   def closeDatabase(self):
-    # FIXME how do we close the database? just null out engine/session?
-    pass
-
+    if self.session is not None:
+      self.session.close()
+      self.session = None
+    self.engine = None
 
   # create new uninitialized spdxSummarizer database
   # WARNING: will delete the specified DB file if it already exists
@@ -58,9 +59,10 @@ class SPDatabase(object):
           errstr = str(e)
           print(f"{db_filename} exists and can't be deleted: {errstr}")
           return False
+    engine_str = "sqlite:///" + db_filename
 
     # connect to (e.g. create) database
-    self.engine = create_engine(db_filename)
+    self.engine = create_engine(engine_str)
     # FIXME check for errors
     Session = sessionmaker(bind=self.engine)
     self.session = Session()
@@ -75,17 +77,17 @@ class SPDatabase(object):
     self.session.commit()
     return True
 
-
   # open connection to existing spdxSummarizer database, and confirm
   # that it is a valid spdxSummarizer database
   # arguments:
   #   1) db_filename: string with path to database file
   # returns: True on success, False on failure
   def openDatabase(self, db_filename):
+    # don't accept :memory: here; only open existing DBs
     if os.path.exists(db_filename):
-
       # connect to (e.g. create) database
-      self.engine = create_engine(db_filename)
+      engine_str = "sqlite:///" + db_filename
+      self.engine = create_engine(engine_str)
       # FIXME check for errors
       Session = sessionmaker(bind=self.engine)
       self.session = Session()
@@ -113,14 +115,12 @@ class SPDatabase(object):
   def commitChanges(self):
     self.session.commit()
 
-
   # Roll back changes to database since last commit.  Typically called when
   # encountering an error during e.g. a set of calls to addNewFile().
   # arguments: N/A
   # returns: N/A
   def rollbackChanges(self):
     self.session.rollback()
-
 
   # Initialize config table based on dict already read from JSON file.
   # arguments:
@@ -134,7 +134,6 @@ class SPDatabase(object):
     self.session.bulk_save_objects(configs)
     self.session.commit()
     return True
-
 
   # Initialize categories and licenses tables based on dict already read 
   # from JSON file.
@@ -164,7 +163,6 @@ class SPDatabase(object):
 
     self.session.commit()
     return True
-
 
   # Initialize conversions tables based on dict already read from JSON file.
   # arguments:
@@ -292,15 +290,20 @@ class SPDatabase(object):
   #   2) description (optional)
   #   3) commit: if True, commit updates at end
   # returns: new ID for scan if successfully added to DB, or -1 otherwise
-  def addNewScan(self, scan_dt, desc="no description", commit=True):
+  def addNewScan(self, scan_dt_str, desc="no description", commit=True):
     if not self.isInitialized():
       print(f"Cannot add new scan; DB is not initialized")
       return -1
     try:
+      # FIXME in future, may require scan_dt as datetime.date object
+      scan_dt_datetime = datetime.datetime.strptime(scan_dt_str, "%Y-%m-%d")
+      scan_dt = scan_dt_datetime.date()
       scan = Scan(scan_dt=scan_dt, desc=desc)
       self.session.add(scan)
       if commit:
         self.session.commit()
+      else:
+        self.session.flush()
       return scan.id
     except Exception as e:
       print(f'Error adding new scan {desc}: {str(e)}')
@@ -356,6 +359,8 @@ class SPDatabase(object):
       self.session.add(cat)
       if commit:
         self.session.commit()
+      else:
+        self.session.flush()
       return cat.id
     except Exception as e:
       print(f'Error adding new category {name}: {str(e)}')
@@ -412,6 +417,8 @@ class SPDatabase(object):
       self.session.add(lic)
       if commit:
         self.session.commit()
+      else:
+        self.session.flush()
       return lic.id
     except Exception as e:
       print(f'Error adding new license {short_name}: {str(e)}')
@@ -468,6 +475,8 @@ class SPDatabase(object):
       self.session.add(conv)
       if commit:
         self.session.commit()
+      else:
+        self.session.flush()
       return conv.id
     except Exception as e:
       print(f'Error adding new conversion {old_text}: {str(e)}')
@@ -526,6 +535,8 @@ class SPDatabase(object):
       self.session.add(file)
       if commit:
         self.session.commit()
+      else:
+        self.session.flush()
       return file.id
     except Exception as e:
       print(f'Error adding new file {old_text}: {str(e)}')
@@ -652,6 +663,8 @@ class SPDatabase(object):
         self.session.add(config)
       if commit:
         self.session.commit()
+      else:
+        self.session.flush()
       return True
     except Exception as e:
       print(f'Error setting config for {key}: {str(e)}')
