@@ -42,6 +42,9 @@ class Scan(Base):
   def __repr__(self):
     return f"Scan {self.id}: {self.scan_dt}, {self.desc}"
 
+  def asTuple(self):
+    return (self.id, self.scan_dt, self.desc)
+
 class Category(Base):
   __tablename__ = 'categories'
   id = Column(Integer(), primary_key=True)
@@ -49,6 +52,9 @@ class Category(Base):
 
   def __repr__(self):
     return f"Category {self.id}: {self.name}"
+
+  def asTuple(self):
+    return (self.id, self.name)
 
 class License(Base):
   __tablename__ = 'licenses'
@@ -61,6 +67,9 @@ class License(Base):
 
   def __repr__(self):
     return f"License {self.id}: {self.short_name}, category {self.category.name}"
+
+  def asTuple(self):
+    return (self.id, self.short_name, self.category_id)
 
 class File(Base):
   __tablename__ = 'files'
@@ -78,6 +87,10 @@ class File(Base):
   def __repr__(self):
     return f"File {self.filename}, license: {self.license.short_name}"
 
+  def asTuple(self):
+    return (self.id, self.scan_id, self.filename, self.license_id,
+      self.md5, self.sha1)
+
 class Conversion(Base):
   __tablename__ = 'conversions'
   # columns
@@ -92,3 +105,6 @@ class Conversion(Base):
 
   def __repr__(self):
     return f"Conversion {self.id}: {self.old_text} => {self.new_license.short_name} ({self.new_license_id})"
+
+  def asTuple(self):
+    return (self.id, self.old_text, self.new_license_id)
