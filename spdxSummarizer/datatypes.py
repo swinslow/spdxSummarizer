@@ -43,7 +43,8 @@ class Scan(Base):
     return f"Scan {self.id}: {self.scan_dt}, {self.desc}"
 
   def asTuple(self):
-    return (self.id, self.scan_dt, self.desc)
+    # FIXME in the future, consider keeping scan_dt as datetime.date
+    return (self.id, str(self.scan_dt), self.desc)
 
 class Category(Base):
   __tablename__ = 'categories'
