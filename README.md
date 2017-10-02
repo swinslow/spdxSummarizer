@@ -27,9 +27,11 @@ The initial version of spdxSummarizer was written by Steve Winslow and is Copyri
 
 ## Requirements and dependencies
 
-spdxSummarizer requires Python 3.6 or later. spdxSummarizer uses the standard SQLite module included with Python 3.6.
+spdxSummarizer requires Python 3.6 or later.
 
-The only non-standard dependency used by spdxSummarizer is [XlsxWriter](https://github.com/jmcnamara/XlsxWriter), which should be installed using pip. XlsxWriter is provided under the BSD-2-Clause-FreeBSD license.
+spdxSummarizer uses the following dependencies, which should be installed using pip and are received under the following licenses:
+- [XlsxWriter](https://github.com/jmcnamara/XlsxWriter) - [BSD-2-Clause-FreeBSD](https://github.com/jmcnamara/XlsxWriter/blob/master/LICENSE.txt)
+- [SQLAlchemy](http://www.sqlalchemy.org/) - [MIT](https://github.com/zzzeek/sqlalchemy/blob/master/LICENSE)
 
 As described above, spdxSummarizer is only useful in conjunction with SPDX files. SPDX is a registered trademark of The Linux Foundation.
 
@@ -41,5 +43,5 @@ The spdxSummarizer documentation is released under the [Creative Commons Attribu
 
 This README.md file is documentation, and therefore gets the following:
 ```
-# SPDX-License-Identifier: CC-BY-4.0
+SPDX-License-Identifier: CC-BY-4.0
 ```
