@@ -369,6 +369,10 @@ class DBToolsTestSuite(unittest.TestCase):
       self.assertGreater(id, last_id)
       last_id = id
 
+  ##### FIXME add tests for Files
+  ##### FIXME add tests for Conversions
+  ##### FIXME add tests for Configs
+
 ########## MAIN ENTRY POINT ##########
 
 if __name__ == "__main__":
