@@ -155,7 +155,7 @@ class spdxSummarizer:
     # check if file exists
     if os.path.exists(db_filename):
       self.db = SPDatabase()
-      retval = self.db.getDatabaseConn(db_filename)
+      retval = self.db.openDatabase(db_filename)
       if retval:
         flag_init = self.db.isInitialized()
         if flag_init:
