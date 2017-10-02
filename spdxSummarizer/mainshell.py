@@ -425,7 +425,7 @@ Do you want to review and categorize these licenses now?
     print(f"Created new scan with database ID {scan_id}.")
 
     # now, cycle through and add files
-    filecount = 0
+    file_tuples = []
     for fd in fds:
       # look up the license ID from ldict, NOT from licstore
       lt = ldict.get(fd.license, None)
@@ -433,19 +433,20 @@ Do you want to review and categorize these licenses now?
         print(f"Error: couldn't get matched license for {fd.filename}; rolling back and canceling import.")
         self.db.rollbackChanges()
         return False
-      # now we've got the right license ID, so add to database
-      # tell it not to commit yet
-      file_id = self.db.addNewFile(scan_id, fd.filename, lt[0],
-        fd.md5, fd.sha1, False)
-      if file_id == -1:
-        print(f"Error: couldn't add file {fd.filename} to database; rolling back and canceling import.")
-        self.db.rollbackChanges()
-        return False
-      filecount = filecount + 1
+      # now we've got the right license ID, so add to list of file tuples
+      # which we'll submit in bulk below
+      file_tuple = (fd.filename, lt[0], fd.md5, fd.sha1)
+      file_tuples.append(file_tuple)
+
+    # submit list of file tuples in bulk to add to database
+    retval = self.db.addBulkNewFiles(scan_id, file_tuples, True)
+    if not retval:
+      print(f"Error: couldn't add files for scan {scan_id} to database; rolling back and canceling import.")
+      self.db.rollbackChanges()
+      return False
 
     # and we're done!
-    self.db.commitChanges()
-    print(f"Saved {filecount} files to database for scan {scan_id}.")
+    print(f"Saved {len(file_tuples)} files to database for scan {scan_id}.")
     return True
 
   # Initial scan request.  Ask the user to tell us where to find the SPDX

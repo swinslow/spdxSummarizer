@@ -291,9 +291,6 @@ class SPDatabase(object):
   #   3) commit: if True, commit updates at end
   # returns: new ID for scan if successfully added to DB, or -1 otherwise
   def addNewScan(self, scan_dt_str, desc="no description", commit=True):
-    if not self.isInitialized():
-      print(f"Cannot add new scan; DB is not initialized")
-      return -1
     try:
       # FIXME in future, may require scan_dt as datetime.date object
       scan_dt_datetime = datetime.datetime.strptime(scan_dt_str, "%Y-%m-%d")
@@ -348,9 +345,6 @@ class SPDatabase(object):
   #   3) id: if non-zero, use this for new ID
   # returns: new ID for category if successfully added to DB, or -1 otherwise
   def addNewCategory(self, name, commit=True, id=0):
-    if not self.isInitialized():
-      print(f"Cannot add new category; DB is not initialized")
-      return -1
     try:
       if id == 0:
         cat = Category(name=name)
@@ -406,9 +400,6 @@ class SPDatabase(object):
   #   4) id: if non-zero, use this for new ID
   # returns: new ID for license if successfully added to DB, or -1 otherwise
   def addNewLicense(self, short_name, category_id, commit=True, id=0):
-    if not self.isInitialized():
-      print(f"Cannot add new license; DB is not initialized")
-      return -1
     try:
       if id == 0:
         lic = License(short_name=short_name, category_id=category_id)
@@ -464,9 +455,6 @@ class SPDatabase(object):
   #   4) id: if non-zero, use this for new ID
   # returns: new ID for conversion if successfully added to DB, or -1 otherwise
   def addNewConversion(self, old_text, new_license_id, commit=True, id=0):
-    if not self.isInitialized():
-      print(f"Cannot add new conversion; DB is not initialized")
-      return -1
     try:
       if id == 0:
         conv = Conversion(old_text=old_text, new_license_id=new_license_id)
@@ -526,9 +514,6 @@ class SPDatabase(object):
   # NOTE that scan and license IDs are foreign key constraints, so those must
   #      be added prior to adding a file that references them
   def addNewFile(self, scan_id, filename, license_id, md5, sha1, commit=True):
-    if not self.isInitialized():
-      print(f"Cannot add new file; DB is not initialized")
-      return -1
     try:
       file = File(scan_id=scan_id, filename=filename, license_id=license_id,
         md5=md5, sha1=sha1)
@@ -539,8 +524,39 @@ class SPDatabase(object):
         self.session.flush()
       return file.id
     except Exception as e:
-      print(f'Error adding new file {old_text}: {str(e)}')
+      print(f'Error adding new file {filename}: {str(e)}')
       return -1
+
+  # Add bulk list of new files to database.
+  # arguments:
+  #   1) scan ID
+  #   2) list of tuples in format:
+  #      (filename, ID of license, MD5 string, SHA1 string)
+  #   3) commit: if True, commit updates at end
+  # returns: True if successfully added to DB, False otherwise
+  # NOTE that scan and license IDs are foreign key constraints, so those must
+  #      be added prior to adding a file that references them
+  def addBulkNewFiles(self, scan_id, file_tuples, commit=True):
+    try:
+      files = []
+      for ft in file_tuples:
+        file = File(
+          scan_id=scan_id,
+          filename=ft[0],
+          license_id=ft[1],
+          md5=ft[2],
+          sha1=ft[3]
+        )
+        files.append(file)
+      self.session.bulk_save_objects(files)
+      if commit:
+        self.session.commit()
+      else:
+        self.session.flush()
+      return True
+    except Exception as e:
+      print(f'Error adding bulk new files for scan {scan_id}: {str(e)}')
+      return False
 
   ########## COMBO DATA FUNCTIONS ##########
 
