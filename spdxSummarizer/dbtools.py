@@ -438,7 +438,7 @@ class SPDatabase(object):
   # returns: list of data tuples from all conversions in database
   #   tuple format: (id, old_text, new_license_id)
   def getConversionsData(self):
-    convs = self.session.query(Conversions).order_by(Conversion.id)
+    convs = self.session.query(Conversion).order_by(Conversion.id)
     convList = []
     for conv in convs:
       convList.append(conv.asTuple())
