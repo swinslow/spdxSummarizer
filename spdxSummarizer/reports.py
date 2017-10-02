@@ -28,7 +28,7 @@ from spdxSummarizer.analysis import (analyzeFileExtensions,
 
 # Create a file/license CSV report.
 # arguments:
-#   1) db: FTDatabase
+#   1) db: SPDatabase
 #   2) scan_id: ID of scan
 #   3) csv_filename: filename for CSV output file to be created
 # returns: True if successfully created CSV file, False otherwise
@@ -71,7 +71,7 @@ def outputCSVFull(db, scan_id, csv_filename):
 
 # Create a full Excel report.
 # arguments:
-#   1) db: FTDatabase
+#   1) db: SPDatabase
 #   2) scan_id: ID of scan
 #   3) xlsx_filename: filename for XLSX output file to be created
 # returns: True if successfully created report, False otherwise
@@ -181,7 +181,7 @@ def outputExcelFull(db, scan_id, xlsx_filename):
 #   * files just in old
 #   * files just in new
 # arguments:
-#   1) db: FTDatabase
+#   1) db: SPDatabase
 #   2) first_scan_id:  ID of first scan
 #   3) second_scan_id: ID of second scan
 #   4) xlsx_filename: filename for XLSX output file to be created

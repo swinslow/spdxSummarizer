@@ -23,7 +23,7 @@ import os
 import sys
 import readline
 
-from spdxSummarizer.dbtools import FTDatabase
+from spdxSummarizer.dbtools import SPDatabase
 from spdxSummarizer.parsetools import parseSPDXReport, removePrefixes
 from spdxSummarizer.licenses import FTLicenseStore
 from spdxSummarizer.reports import (outputCSVFull, outputExcelFull,
@@ -122,7 +122,7 @@ class spdxSummarizer:
       print(f"Not creating {db_filename}.")
       return False
 
-    self.db = FTDatabase()
+    self.db = SPDatabase()
     conn = self.db.createDatabase(db_filename)
     if not conn:
       print(f"Error; failed to create {db_filename}.")
@@ -141,12 +141,12 @@ class spdxSummarizer:
     print(f'Successfully created and initialized {db_filename}.')
     return True
 
-  # Checks if SQLite DB file exists.  If it does, return a FTDatabase object
+  # Checks if SQLite DB file exists.  If it does, return a SPDatabase object
   # with an open connection.  If it doesn't exist, ask the user whether to
   # create and initialize it.
   # arguments:
   #   1) path to SQLite DB (passed as command line argument from main)
-  # returns: FTDatabase object with opened connection if valid, or None if not
+  # returns: SPDatabase object with opened connection if valid, or None if not
   def shellLoadDatabase(self, db_filename):
     if not db_filename:
       print("Error: must call shellLoadDatabase with path for DB file")
@@ -154,7 +154,7 @@ class spdxSummarizer:
 
     # check if file exists
     if os.path.exists(db_filename):
-      self.db = FTDatabase()
+      self.db = SPDatabase()
       retval = self.db.getDatabaseConn(db_filename)
       if retval:
         flag_init = self.db.isInitialized()

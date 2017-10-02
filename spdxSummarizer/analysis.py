@@ -29,7 +29,7 @@ import os.path
 # Keep the category the same, but change the license to "No license found -
 # excluded file extension". Also adjust the corresponding license count values.
 # arguments:
-#   1) FTDatabase
+#   1) SPDatabase
 #   2) dict of category =>
 #       (category_name, {filename => license}, {license => count})
 #      typically created by dbtools.getCategoryFilesForScan()
@@ -82,7 +82,7 @@ def analyzeFileExtensions(db, cats):
 # Modify a filename => license dict so that "No license found" files
 # with extensions in the "ignore_extensions" list are separately designated.
 # arguments:
-#   1) FTDatabase
+#   1) SPDatabase
 #   2) dict of filename => license
 #      typically created by dbtools.getLicenseAndFilesForScan()
 # returns: True if successfully modified dict, False on error
@@ -114,7 +114,7 @@ def analyzeFileExtensionsForFlatDict(db, records):
 # Keep the category the same, but change the license to "No license found -
 # in vendor directory". Also adjust the corresponding license count values.
 # arguments:
-#   1) FTDatabase
+#   1) SPDatabase
 #   2) dict of category =>
 #       (category_name, {filename => license}, {license => count})
 #      typically created by dbtools.getCategoryFilesForScan()
@@ -157,7 +157,7 @@ def analyzeVendorFiles(db, cats):
 # Modify a filename => license dict so that "No license found" files
 # inside a "vendor/" directory are separately designated.
 # arguments:
-#   1) FTDatabase
+#   1) SPDatabase
 #   2) dict of filename => license
 #      typically created by dbtools.getLicenseAndFilesForScan()
 # returns: True if successfully modified dict, False on error
