@@ -651,7 +651,7 @@ class SPDatabase(object):
   #   1) key string
   # returns: value for key if found, or None otherwise
   def getConfigForKey(self, key):
-    config = self.session.query(Config).filter(key == key).first()
+    config = self.session.query(Config).filter(Config.key == key).first()
     try:
       return config.value
     except AttributeError:
