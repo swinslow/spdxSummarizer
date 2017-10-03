@@ -476,7 +476,7 @@ class SPDatabase(object):
   # arguments:
   #   1) ID of file
   # returns: tuple of data if found or None if not found
-  #   tuple format: (id, scan_id, filename, license_id, md5, sha1)
+  #   tuple format: (id, scan_id, filename, license_id, sha1, md5, sha256)
   def getFileData(self, file_id):
     file = self.session.query(File).filter(File.id == file_id).first()
     if file is not None:
@@ -489,7 +489,7 @@ class SPDatabase(object):
   #   1) ID of scan
   #   2) filename
   # returns: tuple of data if found or None if not found
-  #   tuple format: (id, scan_id, filename, license_id, md5, sha1)
+  #   tuple format: (id, scan_id, filename, license_id, sha1, md5, sha256)
   def getFileInstanceData(self, scan_id, filename):
     file = self.session.query(File).filter(
       and_(
@@ -507,16 +507,18 @@ class SPDatabase(object):
   #   1) ID of scan
   #   2) filename
   #   3) ID of license
-  #   4) MD5 string
-  #   5) SHA1 string
-  #   6) commit: if True, commit updates at end
+  #   4) SHA1 string
+  #   5) MD5 string (optional)
+  #   6) SHA256 string (optional)
+  #   7) commit: if True, commit updates at end
   # returns: new ID for file if successfully added to DB, or -1 otherwise
   # NOTE that scan and license IDs are foreign key constraints, so those must
   #      be added prior to adding a file that references them
-  def addNewFile(self, scan_id, filename, license_id, md5, sha1, commit=True):
+  def addNewFile(self, scan_id, filename, license_id, sha1,
+    md5="", sha256="", commit=True):
     try:
       file = File(scan_id=scan_id, filename=filename, license_id=license_id,
-        md5=md5, sha1=sha1)
+        sha1=sha1, md5=md5, sha256=sha256)
       self.session.add(file)
       if commit:
         self.session.commit()
@@ -531,7 +533,8 @@ class SPDatabase(object):
   # arguments:
   #   1) scan ID
   #   2) list of tuples in format:
-  #      (filename, ID of license, MD5 string, SHA1 string)
+  #      (filename, ID of license, SHA1 string, MD5 string, SHA256 string)
+  #      Note that MD5 and SHA256 are not required and may be empty.
   #   3) commit: if True, commit updates at end
   # returns: True if successfully added to DB, False otherwise
   # NOTE that scan and license IDs are foreign key constraints, so those must
@@ -544,8 +547,9 @@ class SPDatabase(object):
           scan_id=scan_id,
           filename=ft[0],
           license_id=ft[1],
-          md5=ft[2],
-          sha1=ft[3]
+          sha1=ft[2],
+          md5=ft[3],
+          sha256=ft[4],
         )
         files.append(file)
       self.session.bulk_save_objects(files)

@@ -28,6 +28,8 @@ from spdxSummarizer.parsetools import parseSPDXReport, removePrefixes
 from spdxSummarizer.licenses import FTLicenseStore
 from spdxSummarizer.reports import (outputCSVFull, outputExcelFull,
   outputExcelComparison)
+from spdxSummarizer.spconfig import (isDBTooOld, isDBTooNew, SPVERSION,
+  SPVERSION_LAST_DB_CHANGE)
 
 prompt = '==> '
 
@@ -159,6 +161,28 @@ class spdxSummarizer:
       if retval:
         flag_init = self.db.isInitialized()
         if flag_init:
+          current_version_str = self.db.getConfigForKey("version")
+          # check whether the DB needs to be migrated
+          m = isDBTooOld(self.db)
+          if m is None:
+            print("Error; couldn't load DB version")
+            return False
+          elif m == True:
+            print(f"Error: Database needs to be migrated (DB version is {current_version_str}; format was changed in {SPVERSION_LAST_DB_CHANGE})")
+            print(f"Please run 'dbMigrate [database-path] upgrade head' from the main spdxSummarizer directory.")
+            return False
+
+          # check whether the DB is from a future version of spdxSummarizer
+          m = isDBTooNew(self.db)
+          if m is None:
+            print("Error; couldn't load DB version")
+            return False
+          elif m == True:
+            print(f"Error: spdxSummarizer needs to be upgraded to use this database (DB version is {current_version_str}; spdxSummarizer version is {SPVERSION})")
+            print(f"Please upgrade your installation of spdxSummarizer to at least {current_version_str}.")
+            return False
+
+          # if we got here, version is good
           return True
 
       # if file exists but isn't initialized, offer to clear and 
@@ -435,7 +459,7 @@ Do you want to review and categorize these licenses now?
         return False
       # now we've got the right license ID, so add to list of file tuples
       # which we'll submit in bulk below
-      file_tuple = (fd.filename, lt[0], fd.md5, fd.sha1)
+      file_tuple = (fd.filename, lt[0], fd.sha1, fd.md5, fd.sha256)
       file_tuples.append(file_tuple)
 
     # submit list of file tuples in bulk to add to database

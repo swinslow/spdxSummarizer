@@ -79,8 +79,9 @@ class File(Base):
   scan_id = Column(Integer(), ForeignKey('scans.id'))
   filename = Column(String())
   license_id = Column(Integer(), ForeignKey('licenses.id'))
-  md5 = Column(String())
   sha1 = Column(String())
+  md5 = Column(String())
+  sha256 = Column(String())
   # relationships
   scan = relationship("Scan", backref=backref('files', order_by=id))
   license = relationship("License", backref=backref('files', order_by=id))
@@ -90,7 +91,7 @@ class File(Base):
 
   def asTuple(self):
     return (self.id, self.scan_id, self.filename, self.license_id,
-      self.md5, self.sha1)
+      self.sha1, self.md5, self.sha256)
 
 class Conversion(Base):
   __tablename__ = 'conversions'
