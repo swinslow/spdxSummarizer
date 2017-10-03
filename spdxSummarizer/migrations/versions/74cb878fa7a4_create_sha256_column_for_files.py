@@ -41,16 +41,15 @@
 #
 # SPDX-License-Identifier: Apache-2.0 AND MIT
 
-"""${message}
+"""Create SHA256 column for files
 
-Revision ID: ${up_revision}
-Revises: ${down_revision | comma,n}
-Create Date: ${create_date}
+Revision ID: 74cb878fa7a4
+Revises: 
+Create Date: 2017-10-03 15:05:57.425361
 
 """
 from alembic import op
 import sqlalchemy as sa
-${imports if imports else ""}
 
 # import version setting function from parent directory
 import os, sys
@@ -58,19 +57,22 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from versioning import set_version
 
 # Fill in old and new version
-OLD_VERSION = "___________"
-NEW_VERSION = "___________"
+NEW_VERSION = "0.2.2"
+OLD_VERSION = "0.2.1"
 
 # revision identifiers, used by Alembic.
-revision = ${repr(up_revision)}
-down_revision = ${repr(down_revision)}
-branch_labels = ${repr(branch_labels)}
-depends_on = ${repr(depends_on)}
+revision = '74cb878fa7a4'
+down_revision = None
+branch_labels = None
+depends_on = None
 
 def upgrade():
-  ${upgrades if upgrades else "pass"}
+  # upgrade to 0.2.2
+  op.add_column('files', sa.Column('sha256', sa.String))
   set_version(op, NEW_VERSION)
 
 def downgrade():
-  ${downgrades if downgrades else "pass"}
+  # downgrade to 0.2.1
+  with op.batch_alter_table('files') as batch_op:
+    batch_op.drop_column('sha256')
   set_version(op, OLD_VERSION)

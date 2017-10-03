@@ -30,11 +30,12 @@ class FileData(object):
   def __init__(self):
     self.filename = ""
     self.license = ""
-    self.md5 = ""
     self.sha1 = ""
+    self.md5 = ""
+    self.sha256 = ""
 
   def __str__(self):
-    return f"FileData: {self.filename}, {self.license}, {self.md5}, {self.sha1}"
+    return f"FileData: {self.filename}, {self.license}"
 
 # Parse an SPDX tag:value report and return a list of FileData for each
 # parsed record found.
@@ -76,16 +77,19 @@ def parseSPDXReport(report_filename):
           current_fd.license = val
 
         elif tag == "FileChecksum":
-          # val should have either an MD5 or an SHA1 tag/value pair
+          # val should have an SHA1 tag/value pair
+          # may also have MD5 and/or SHA256
           sp = val.split(":")
           if len(sp) != 2:
             print(f"Error: couldn't parse checksum tag/value in tag {tag}, value {val} for {current_fd.filename}")
             continue
           checksum = sp[1].strip()
-          if sp[0] == "MD5":
-            current_fd.md5 = checksum
-          elif sp[0] == "SHA1":
+          if sp[0] == "SHA1":
             current_fd.sha1 = checksum
+          elif sp[0] == "MD5":
+            current_fd.md5 = checksum
+          elif sp[0] == "SHA256":
+            current_fd.sha256 = checksum
           else:
             print(f"Error: invalid checksum type {sp[0]} in tag {tag}, value {val} for {current_fd.filename}")
             continue

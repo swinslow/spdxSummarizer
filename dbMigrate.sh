@@ -27,8 +27,7 @@
 # FIXME to have this be definable as part of a Python-packaged installation
 # FIXME setup.
 
-#PYTHONPATH=./ python3 spdxSummarizer/mainshell.py $1
 CONFIGFILE=./spdxSummarizer/migrations/alembic.ini
 DBPATH=$1
 shift
-echo alembic -c $CONFIGFILE -x dbname=sqlite:///$DBPATH "$@"
+alembic -c $CONFIGFILE -x dbname=sqlite:///$DBPATH "$@"

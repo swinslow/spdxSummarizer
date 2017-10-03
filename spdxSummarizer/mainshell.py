@@ -459,7 +459,7 @@ Do you want to review and categorize these licenses now?
         return False
       # now we've got the right license ID, so add to list of file tuples
       # which we'll submit in bulk below
-      file_tuple = (fd.filename, lt[0], fd.md5, fd.sha1)
+      file_tuple = (fd.filename, lt[0], fd.sha1, fd.md5, fd.sha256)
       file_tuples.append(file_tuple)
 
     # submit list of file tuples in bulk to add to database
