@@ -116,5 +116,7 @@ def isDBTooNew(db):
   if not db_version_str:
     print("Error: Couldn't get version string from database")
     return None
-  compare_val = compareVersionStrings(db_version_str, SPVERSION_LAST_DB_CHANGE)
+  # comparing against SPVERSION because we're looking at whether or not
+  # this database's version is from a future version of spdxSummarizer.
+  compare_val = compareVersionStrings(db_version_str, SPVERSION)
   return compare_val > 0
