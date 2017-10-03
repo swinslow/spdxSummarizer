@@ -19,12 +19,12 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # current version of spdxSummarizer
-SPVERSION = "0.2.1"
+SPVERSION = "0.2.2"
 
 # latest version in which database migrations are required
 # e.g. if a DB version is newer than this, then it doesn't require
 # a migration, even if it's older than the current SPVERSION
-SPVERSION_LAST_DB_CHANGE = "0.2.0"
+SPVERSION_LAST_DB_CHANGE = "0.2.2"
 
 # Get a version tuple from a version string
 # arguments:
@@ -89,3 +89,32 @@ def compareVersionToCurrent(version_str):
 #          >0 if version is greaterthan last database change version
 def compareVersionToLastDatabaseChange(version_str):
   return compareVersionStrings(version_str, SPVERSION_LAST_DB_CHANGE)
+
+##### DB migration version functions
+
+# Given a database, determine whether it needs to be migrated due to
+# later changes in spdxSummarizer.
+# arguments:
+#   1) db: SPDatabase
+# returns: True if DB is too old (needs migration); False if not too old;
+#   None if error
+def isDBTooOld(db):
+  db_version_str = db.getConfigForKey("version")
+  if not db_version_str:
+    print("Error: Couldn't get version string from database")
+    return None
+  compare_val = compareVersionStrings(db_version_str, SPVERSION_LAST_DB_CHANGE)
+  return compare_val < 0
+
+# Given a database, determine whether it is too new to be used with this
+# version of spdxSummarizer.
+# arguments:
+#   1) db: SPDatabase
+# returns: True if DB is too new; False if not too new; None if error
+def isDBTooNew(db):
+  db_version_str = db.getConfigForKey("version")
+  if not db_version_str:
+    print("Error: Couldn't get version string from database")
+    return None
+  compare_val = compareVersionStrings(db_version_str, SPVERSION_LAST_DB_CHANGE)
+  return compare_val > 0
