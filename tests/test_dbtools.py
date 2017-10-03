@@ -156,12 +156,6 @@ class DBToolsTestSuite(unittest.TestCase):
     scan = self.db.getScanData(scan_id)
     self.assertIsNone(scan)
 
-  def test_cannot_add_new_scan_to_uninitialized_db(self):
-    new_db = dbtools.SPDatabase()
-    new_db.createDatabase(":memory:")
-    scan_id = new_db.addNewScan("2018-01-01", "should fail", True)
-    self.assertEqual(scan_id, -1)
-
   ##### Category data
 
   def test_can_get_list_of_category_ids(self):
