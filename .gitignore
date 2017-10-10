@@ -27,3 +27,4 @@ __pycache__
 *.xlsx
 *.pptx
 scratch/*
+demo/*
